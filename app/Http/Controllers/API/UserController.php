@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Interfaces\UserInterface;
-use Illuminate\Http\Request;
+use App\Interfaces\UserInterfaces;
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
-    protected $UserInterface;
+    protected $userInterface;
 
-    public function __construct(UserInterface $UserInterface){
-        $this->UserInterface = $UserInterface;
+    public function __construct(UserInterfaces $UserInterface){
+        $this->userInterface = $UserInterface;
     }
     /**
      * Display a listing of the resource.
@@ -35,6 +35,16 @@ class UserController extends Controller
     public function show($id)
     {
         return $this->userInterface->getUserById($id);
+    }
+     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\UserRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(UserRequest $request)
+    {
+        return $this->userInterface->requestUser($request);
     }
 
     /**

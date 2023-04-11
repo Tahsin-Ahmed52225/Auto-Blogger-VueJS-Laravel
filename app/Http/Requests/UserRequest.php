@@ -23,10 +23,21 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|max:50',
-            'email' => request()->route('user')
-                ? 'required|email|max:255|unique:users,email,' . request()->route('user')
-                : 'required|email|max:255|unique:users,email',
+            'email' => 'required|max:50',
             'password' => request()->route('user') ? 'nullable' : 'required|max:50'
+        ];
+    }
+         /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+      return  $message = [
+           "name.required" => "Name is required",
+           "email.required" => "Email is required",
+           "password.required" => "Password is required",
         ];
     }
 }

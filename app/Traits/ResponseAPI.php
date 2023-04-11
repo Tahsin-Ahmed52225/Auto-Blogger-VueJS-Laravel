@@ -26,12 +26,12 @@ trait ResponseAPI
             }
         }
     }
-    public function success()
+    public function success($msg, $data , $statusCode = 200)
     {
-        return coreResponse($msg, 200, $data, true);
+        return $this->coreResponse($msg, $statusCode, $data, true);
     }
-    public function error()
+    public function error($msg , $statusCode = 500)
     {
-        return coreResponse($msg, 500, null, false);
+        return $this->coreResponse($msg, $statusCode, null, false);
     }
 }
