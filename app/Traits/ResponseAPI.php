@@ -4,7 +4,16 @@ namespace App\Traits;
 
 trait ResponseAPI
 {
-    public function coreResponse($msg, $statusCode, $data = null, $isSuccess = true)
+    /**
+     * coreResponse
+     *
+     * @param  string $msg
+     * @param  int $statusCode
+     * @param  array $data
+     * @param  bool $isSuccess
+     * @return json response
+     */
+    public function coreResponse(string $msg, int $statusCode, array $data = null, bool $isSuccess = true)
     {
         if (!$msg) {
             return response()->json(["message" => "Message is required", 500]);
@@ -26,11 +35,19 @@ trait ResponseAPI
             }
         }
     }
-    public function success($msg, $data , $statusCode = 200)
+    /**
+     * success
+     *
+     * @param  mixed $msg
+     * @param  mixed $data
+     * @param  mixed $statusCode
+     * @return void
+     */
+    public function success($msg, $data, $statusCode = 200)
     {
         return $this->coreResponse($msg, $statusCode, $data, true);
     }
-    public function error($msg , $statusCode = 500)
+    public function error($msg, $statusCode = 500)
     {
         return $this->coreResponse($msg, $statusCode, null, false);
     }

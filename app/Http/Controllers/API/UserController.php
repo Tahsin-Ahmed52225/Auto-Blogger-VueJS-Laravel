@@ -10,7 +10,8 @@ class UserController extends Controller
 {
     protected $userInterface;
 
-    public function __construct(UserInterfaces $UserInterface){
+    public function __construct(UserInterfaces $UserInterface)
+    {
         $this->userInterface = $UserInterface;
     }
     /**
@@ -59,6 +60,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->userInterface->deleteUser($id);
+        return $this->userInterface->deleteUserByID($id);
     }
 }

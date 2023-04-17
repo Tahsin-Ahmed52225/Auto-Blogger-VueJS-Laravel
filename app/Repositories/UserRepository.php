@@ -8,10 +8,16 @@ use App\Traits\ResponseAPI;
 use App\Models\User;
 use DB;
 
-class UserRepository implements UserInterfaces {
-
+class UserRepository implements UserInterfaces
+{
     use ResponseAPI;
 
+    /**
+     * Get all users
+     *
+     * @method  GET api/users
+     * @access  public
+     */
     public function getAllusers()
     {
         try {
@@ -21,33 +27,34 @@ class UserRepository implements UserInterfaces {
             return $this->error($e->getMessage(), $e->getCode());
         }
     }
+
     public function getUserByID($userID)
     {
         try {
             $user = User::find($userID);
-            if($user){
+            if ($user) {
                 return $this->success("User data", $user);
-            }else{
+            } else {
                 return $this->error("User not found", 404);
             }
-
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode());
         };
     }
-    public function requestUser(UserRequest $request , $id = null)
+    public function requestUser(UserRequest $request, $id = null)
     {
         try {
-
             $user = $id ? User::find($id) : new User();
-            if ( $id && !$user) return $this->error("User not found", 404);
+            if ($id && !$user) {
+                return $this->error("User not found", 404);
+            }
             $user->name = $request->name;
             $user->email = preg_replace('/\s+/', '', strtolower($request->email));
-            if(!$id){
+            if (!$id) {
                 $user->password = \Hash::make($request->password);
-            } 
+            }
             $user->save();
-            return $this->success($id ? "User updated":"User created",$user, $id ? 200 : 201);
+            return $this->success($id ? "User updated" : "User created", $user, $id ? 200 : 201);
         } catch (\Exception $e) {
             return $this->error($e->getMessage(), $e->getCode());
         };
@@ -55,8 +62,11 @@ class UserRepository implements UserInterfaces {
     public function deleteUserByID($id)
     {
         try {
+            $user = User::find($id);
             DB::beginTransaction();
-            if(!$user) return $this->error("No user with ID $id", 404);
+            if (!$user) {
+                return $this->error("No user with ID $id", 404);
+            }
             $user->delete();
             DB::commit();
             return $this->success("User deleted", $user);

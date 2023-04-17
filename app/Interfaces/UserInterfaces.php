@@ -10,7 +10,7 @@ interface UserInterfaces
 
     public function getUserByID($userID);
 
-    public function requestUser(UserRequest $request , $userID = null);
-    
+    public function requestUser(UserRequest $request, $userID = null);
+
     public function deleteUserByID($userID);
 }
