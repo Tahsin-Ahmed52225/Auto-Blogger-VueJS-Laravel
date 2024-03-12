@@ -2,77 +2,95 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\UserException;
 use App\Http\Requests\UserRequest;
-use App\Interfaces\UserInterfaces;
-use App\Traits\ResponseAPI;
+use App\Interfaces\UserInterface;
 use App\Models\User;
-use DB;
+use App\Services\CommonService;
+use Illuminate\Http\{Request, Response};
+use Illuminate\Support\Facades\Hash;
+use Throwable;
 
-class UserRepository implements UserInterfaces
+class UserRepository  implements UserInterface
 {
-    use ResponseAPI;
-
     /**
-     * Get all users
-     *
-     * @method  GET api/users
-     * @access  public
+     * Get all the users
      */
-    public function getAllusers()
+    public function getAllUsers(): object
     {
         try {
-            $users = User::all();
-            return $this->success("All Users", $users);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
+            $data = User::all();
+
+            return returnResponse('Success', $data, Response::HTTP_OK);
+        } catch (Throwable $e) {
+            throw new UserException($e);
         }
     }
+    /**
+     * Get a particular user
+     */
+    public function getUser(Request $request): object
+    {
+        try {
+            $data = User::find($request->id);
+            if ($data) {
 
-    public function getUserByID($userID)
-    {
-        try {
-            $user = User::find($userID);
-            if ($user) {
-                return $this->success("User data", $user);
+                return returnResponse('Success', $data, Response::HTTP_OK);
             } else {
-                return $this->error("User not found", 404);
+
+                return returnResponse('', [], Response::HTTP_NO_CONTENT);
             }
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
-        };
+        } catch (Throwable $e) {
+            throw new UserException($e);
+        }
     }
-    public function requestUser(UserRequest $request, $id = null)
+    /**
+     * Create a new user
+     */
+    public function saveUser(UserRequest $request): object
     {
         try {
-            $user = $id ? User::find($id) : new User();
-            if ($id && !$user) {
-                return $this->error("User not found", 404);
-            }
-            $user->name = $request->name;
-            $user->email = preg_replace('/\s+/', '', strtolower($request->email));
-            if (!$id) {
-                $user->password = \Hash::make($request->password);
-            }
-            $user->save();
-            return $this->success($id ? "User updated" : "User created", $user, $id ? 200 : 201);
-        } catch (\Exception $e) {
-            return $this->error($e->getMessage(), $e->getCode());
-        };
+            $data = User::create($request->all());
+
+            return returnResponse('Success', $data, Response::HTTP_CREATED);
+        } catch (Throwable $e) {
+            throw new UserException($e);
+        }
     }
-    public function deleteUserByID($id)
+    /**
+     * Update user data
+     */
+    public function updateUser(UserRequest $request, int $userID): object
+    {
+
+        try {
+            $data = User::find($userID);
+            if ($data) {
+                $data->update($request->all());
+
+                return returnResponse('Success', $data, Response::HTTP_OK);
+            } else {
+                return returnResponse('', [], Response::HTTP_NO_CONTENT);
+            }
+        } catch (Throwable $e) {
+            throw new UserException($e);
+        }
+    }
+    /**
+     * Delete user data
+     */
+    public function deleteUser(Request $request): object
     {
         try {
-            $user = User::find($id);
-            DB::beginTransaction();
-            if (!$user) {
-                return $this->error("No user with ID $id", 404);
+            $data = User::find($request->id);
+            if ($data) {
+                $data->delete();
+                return returnResponse('Success', $data, Response::HTTP_OK);
+            } else {
+                return returnResponse('', [], Response::HTTP_NO_CONTENT);
             }
-            $user->delete();
-            DB::commit();
-            return $this->success("User deleted", $user);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return $this->error($e->getMessage(), $e->getCode());
+        } catch (Throwable $e) {
+            throw new UserException($e);
         }
     }
 }

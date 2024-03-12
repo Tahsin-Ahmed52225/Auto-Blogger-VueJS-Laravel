@@ -2,28 +2,22 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\UserException;
 use Illuminate\Foundation\Http\FormRequest;
-use stdClass;
-use Throwable;
 
-class UserRequest extends FormRequest
+class CategoryRequest extends FormRequest
 {
     /**
-     * Rules for UserRequest.
+     * Rules for CategoryRequest Create.
      */
     private array $createRules = [
-        'name'      => 'required|max:50',
-        'email'     => 'required|email|max:255|unique:users,email',
-        'password'  => 'required|max:50'
+        'category_name'         => 'required|unique:categories|max:255',
+        'category_slug'         => 'required|unique:categories|max:255',
     ];
     /**
-     * Rules for UserRequest.
+     * Rules for UserRequest Update.
      */
     private array $updateRules = [
-        'name'      => 'sometimes|required|max:50',
-        'email'     => 'sometimes|required|email|max:255|unique:users,email',
-        'password'  => 'sometimes|required|max:50'
+        'category_name'         => 'sometimes|required|max:255',
     ];
     /**
      * Determine if the user is authorized to make this request.
@@ -44,17 +38,18 @@ class UserRequest extends FormRequest
         };
     }
     /**
-     * Rules for user post request.
+     * Rules for PostRequest.
      */
-    protected function getCreateRules(): array
+    protected function getCreateRules()
     {
         return $this->createRules;
     }
     /**
-     * Rules for user put request.
+     * Rules for PostRequest.
      */
-    protected function getUpdateRules(): array
+    protected function getUpdateRules()
     {
+        $this->updateRules['category_slug'] = 'sometimes|required|unique:categories,id,' . $this->id . '|max:255';
         return $this->updateRules;
     }
 }

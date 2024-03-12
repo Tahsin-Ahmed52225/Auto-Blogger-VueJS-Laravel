@@ -3,75 +3,74 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
-use App\Interfaces\UserInterface;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\PostRequest;
+use App\Interfaces\PostInterface;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class PostController extends Controller
 {
     /**
-     * @var UserInterface
+     * @var PostInterface
      */
-    protected UserInterface $userInterface;
+    protected PostInterface $postInterface;
     /**
      * Constructor
      */
-    public function __construct(UserInterface $userInterface)
+    public function __construct(PostInterface $postInterface)
     {
-        $this->userInterface = $userInterface;
+        $this->postInterface = $postInterface;
     }
     /**
-     * Getting all the user data
+     * Getting all the post data
      */
-    public function index(): JsonResponse
+    public function index()
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->getAllUsers();
+        $response = $this->postInterface->getAllPosts();
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Get a particular user data ( By ID )
+     * Getting post by post ID
      */
-    public function show(Request $request): JsonResponse
+    public function show(Request $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->getUser($request);
+        $response = $this->postInterface->getPost($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Create a new user data
+     * Creating new post
      */
-    public function store(UserRequest $request): JsonResponse
+    public function store(PostRequest $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->saveUser($request);
+        $response = $this->postInterface->savePost($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Update user data
+     * Updating post data
      */
-    public function update(UserRequest $request, int $id): JsonResponse
+    public function update(PostRequest $request, int $postID)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->updateUser($request, $id);
+        $response = $this->postInterface->updatePost($request, $postID);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Delete user data
+     * deleting post data
      */
     public function delete(Request $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->deleteUser($request);
+        $response = $this->postInterface->deletePost($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);

@@ -3,75 +3,75 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
-use App\Interfaces\UserInterface;
-use Illuminate\Http\JsonResponse;
+use App\Http\Requests\CategoryRequest;
+use App\Interfaces\CategoryInterface;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CategoryController extends Controller
 {
     /**
-     * @var UserInterface
+     * @var CategoryInterface
      */
-    protected UserInterface $userInterface;
+    protected CategoryInterface $categoryInterface;
     /**
      * Constructor
      */
-    public function __construct(UserInterface $userInterface)
+    public function __construct(CategoryInterface $categoryInterface)
     {
-        $this->userInterface = $userInterface;
+        $this->categoryInterface = $categoryInterface;
     }
+
     /**
-     * Getting all the user data
+     * Getting all the category data
      */
-    public function index(): JsonResponse
+    public function index()
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->getAllUsers();
+        $response = $this->categoryInterface->getAllCategories();
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Get a particular user data ( By ID )
+     * Getting category by category ID
      */
-    public function show(Request $request): JsonResponse
+    public function show(Request $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->getUser($request);
+        $response = $this->categoryInterface->getCategory($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Create a new user data
+     * Creating new category
      */
-    public function store(UserRequest $request): JsonResponse
+    public function store(CategoryRequest $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->saveUser($request);
+        $response = $this->categoryInterface->saveCategory($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Update user data
+     * Updating category data
      */
-    public function update(UserRequest $request, int $id): JsonResponse
+    public function update(CategoryRequest $request, int $categoryID)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->updateUser($request, $id);
+        $response = $this->categoryInterface->updateCategory($request, $categoryID);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
     }
     /**
-     * Delete user data
+     * deleting category data
      */
     public function delete(Request $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->deleteUser($request);
+        $response = $this->categoryInterface->deleteCategory($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);

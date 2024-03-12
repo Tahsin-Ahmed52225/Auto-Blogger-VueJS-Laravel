@@ -2,19 +2,11 @@
 
 namespace App\Interfaces;
 
+use App\Http\Requests\{LoginRequest};
 use Illuminate\Http\Request;
 
-interface AuthInterfaces
+interface AuthInterface
 {
-    public function login(LoginRequest $request);
-
-    public function register(Request $request);
-
-    public function logout();
-
-    public function refresh();
-
-    public function userProfile();
-
-    public function createNewToken($token);
+    public function login(LoginRequest $request): object;
+    public function logout(Request $request): object;
 }
