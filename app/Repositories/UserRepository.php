@@ -11,7 +11,7 @@ use Illuminate\Http\{Request, Response};
 use Illuminate\Support\Facades\Hash;
 use Throwable;
 
-class UserRepository  implements UserInterface
+class UserRepository implements UserInterface
 {
     /**
      * Get all the users

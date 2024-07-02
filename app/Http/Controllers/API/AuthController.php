@@ -29,7 +29,6 @@ class AuthController extends Controller
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
         $response = $this->userInterface->saveUser($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
-
         return response()->json($response, $response->status_code);
     }
     /**
