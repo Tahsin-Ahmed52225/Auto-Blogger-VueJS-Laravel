@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\AuthController;
+use App\Http\Controllers\api\{AuthController,UserController};
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +16,9 @@ Route::group(['middleware' => ['cors']], function () {
     #Auth Routes
     Route::post('/login', [AuthController::class, 'login'])->name("login");
     Route::post('/register', [AuthController::class, 'register'])->name("register");
-    Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
+    Route::group(['middleware' => ['auth:sanctum']], function () {
+        Route::get('/users', [UserController::class, 'getAllUsers'])->name("getAllUsers");
+        Route::post('/logout', [AuthController::class, 'logout'])->name("logout");
+    });
 });
 

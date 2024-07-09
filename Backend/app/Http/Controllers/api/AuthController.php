@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\{LoginRequest,UserRequest};
 use App\Interfaces\{AuthInterface,UserInterface};
+use Illuminate\Http\JsonResponse;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,7 @@ class AuthController extends Controller
     /**
      * User registration
      */
-    public function register(UserRequest $request)
+    public function register(UserRequest $request): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
         $response = $this->userInterface->saveUser($request);
@@ -34,7 +35,7 @@ class AuthController extends Controller
     /**
      * User login
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
         $response = $this->authInterface->login($request);
@@ -42,12 +43,12 @@ class AuthController extends Controller
 
         return response()->json($response, $response->status_code);
     }
-    // public function logout(Request $request)
-    // {
-    //     $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-    //     $response = $this->authInterface->logout($request);
-    //     $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
+    public function logout(Request $request)
+    {
+        $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
+        $response = $this->authInterface->logout($request);
+        $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-    //     return response()->json($response, $response->status_code);
-    // }
+        return response()->json($response, $response->status_code);
+    }
 }

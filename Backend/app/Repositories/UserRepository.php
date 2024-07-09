@@ -34,7 +34,6 @@ class UserRepository implements UserInterface
         try {
             $data = User::find($request->id);
             if ($data) {
-
                 return returnResponse('Success', $data, Response::HTTP_OK);
             } else {
 

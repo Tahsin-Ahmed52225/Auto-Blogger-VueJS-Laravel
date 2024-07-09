@@ -11,7 +11,7 @@ if (! function_exists('returnExceptionResponse')) {
     }
 }
 if (! function_exists('returnResponse')) {
-    function returnResponse(string $message, object $data, int $statusCode)
+    function returnResponse(string $message, array|object $data, int $statusCode)
     {
         return (object) [
             "message" => $message ,
