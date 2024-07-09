@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests;
-    use ValidatesRequests;
-    /**
-     * Format the response
-     */
+    use AuthorizesRequests, ValidatesRequests;
+
     public function httpResponseLog(object $response, string $file, int $line, string $funtionName): void
     {
         if (!property_exists($response, 'status_code')) {
