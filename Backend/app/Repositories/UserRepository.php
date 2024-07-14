@@ -2,14 +2,15 @@
 
 namespace App\Repositories;
 
-use App\Exceptions\UserException;
-use App\Http\Requests\UserRequest;
-use App\Interfaces\UserInterface;
+use Throwable;
 use App\Models\User;
 use App\Services\CommonService;
-use Illuminate\Http\{Request, Response};
+use App\Exceptions\UserException;
+use App\Interfaces\UserInterface;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Throwable;
+use Illuminate\Http\{Request, Response};
 
 class UserRepository implements UserInterface
 {
@@ -36,7 +37,6 @@ class UserRepository implements UserInterface
             if ($data) {
                 return returnResponse('Success', $data, Response::HTTP_OK);
             } else {
-
                 return returnResponse('', [], Response::HTTP_NO_CONTENT);
             }
         } catch (Throwable $e) {
@@ -48,8 +48,15 @@ class UserRepository implements UserInterface
      */
     public function saveUser(UserRequest $request)
     {
-        $data = User::create($request->all());
-        return returnResponse('Success', $data, Response::HTTP_CREATED);
+        DB::beginTransaction();
+        try {
+            $data = User::create($request->all());
+            DB::commit();
+            return returnResponse('Success', $data, Response::HTTP_CREATED);
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw new UserException($e);
+        }
     }
     /**
      * Update user data

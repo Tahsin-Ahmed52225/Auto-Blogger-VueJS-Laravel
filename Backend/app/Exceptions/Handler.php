@@ -2,12 +2,13 @@
 
 namespace App\Exceptions;
 
+use Throwable;
+use Illuminate\Http\Response;
 use GuzzleHttp\Exception\ConnectException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -74,12 +75,6 @@ class Handler extends ExceptionHandler
 
                 returnExceptionResponse(get_class($e), [$message], Response::HTTP_BAD_REQUEST);
                 break;
-
-                // Handling Auth exceptions
-            case $e instanceof AuthorizationException:
-
-                returnExceptionResponse("Failed", ['Unauthorized'], Response::HTTP_UNAUTHORIZED);
-                break;
             default:
                 return parent::render($request, $e);
         }
@@ -91,8 +86,17 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
-        });
+        $this->renderable(function (AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                  'message' => 'Error',
+                  'data' => [
+                    'error' => 'Unauthorized route'
+                  ],
+                  'status_code' => 401,
+
+                ], 401);
+            }
+           });
     }
 }
