@@ -31,7 +31,26 @@ class UserController extends Controller
 
         return response()->json($response, $response->status_code);
     }
+     /**
+     * Get user
+     */
+    public function getUser(Request $request): JsonResponse
+    {
+        $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
+        $response = $this->userInterface->getUser($request);
+        $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
+        return response()->json($response, $response->status_code);
+    }
+    /**
+     * Save user
+     */
+    public function saveUser(UserRequest $request): JsonResponse
+    {
+        $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
+        $response = $this->userInterface->saveUser($request);
+        $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-
+        return response()->json($response, $response->status_code);
+    }
 }
