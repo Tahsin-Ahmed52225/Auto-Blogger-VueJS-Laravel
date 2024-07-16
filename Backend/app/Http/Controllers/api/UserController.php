@@ -53,4 +53,16 @@ class UserController extends Controller
 
         return response()->json($response, $response->status_code);
     }
+    /**
+     * Edit User data
+     */
+    public function editUser(UserRequest $request): JsonResponse
+    {
+        $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
+        $response = $this->userInterface->editUser($request);
+        $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
+
+        return response()->json($response, $response->status_code);
+
+    }
 }

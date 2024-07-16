@@ -61,14 +61,13 @@ class UserRepository implements UserInterface
     /**
      * Update user data
      */
-    public function updateUser(UserRequest $request, int $userID): object
+    public function editUser(UserRequest $request, int $userID): object
     {
 
         try {
             $data = User::find($userID);
             if ($data) {
                 $data->update($request->all());
-
                 return returnResponse('Success', $data, Response::HTTP_OK);
             } else {
                 return returnResponse('', [], Response::HTTP_NO_CONTENT);

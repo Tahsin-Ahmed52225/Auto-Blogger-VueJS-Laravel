@@ -22,7 +22,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::get('/users', [UserController::class, 'getAllUsers'])->name("getAllUsers");
         Route::get('/user/{id}', [UserController::class, 'getUser'])->name("getUser");
         Route::post('/user', [UserController::class, 'saveUser'])->name("saveUser");
-        Route::put('/user', [UserController::class, 'updateUser'])->name("updateUser");
+        Route::put('/user', [UserController::class, 'editUser'])->name("editUser");
         Route::delete('/user', [UserController::class, 'deleteUser'])->name("deleteUser");
         # Role Routes
         Route::get('/roles', [RoleController::class, 'index'])->name("role.index");
