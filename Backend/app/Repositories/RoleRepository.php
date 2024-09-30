@@ -1,14 +1,91 @@
 <?php
 
-namespace App\Interfaces;
+namespace App\Repositories;
 
-use Illuminate\Http\Request;
+use Throwable;
+use App\Exceptions\RoleException;
+use App\Interfaces\RoleInterface;
+use App\Http\Requests\RoleRequest;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
+use Illuminate\Http\{Request, Response};
 
-interface RoleInterface
+class RoleRepository implements RoleInterface
 {
-    public function getAllRoles(): object;
-    public function getRole(Request $request): object;
-    public function saveRole(Request $request);
-    public function updateRole(Request $request, int $roleID): object;
-    public function deleteRole(Request $request): object;
+    /**
+     * Get all the Roles
+     */
+    public function index(): object
+    {
+        try {
+            $data = Role::all();
+
+            return returnResponse('Success', $data, Response::HTTP_OK);
+        } catch (Throwable $e) {
+            throw new RoleException($e);
+        }
+    }
+    /**
+     * Get a particular user
+     */
+    public function show(Request $request): object
+    {
+        try {
+            $data = Role::find($request->id);
+            if ($data) {
+                return returnResponse('Success', $data, Response::HTTP_OK);
+            } else {
+                return returnResponse('', [], Response::HTTP_NO_CONTENT);
+            }
+        } catch (Throwable $e) {
+            throw new RoleException($e);
+        }
+    }
+    /**
+     * Create a new user
+     */
+    public function create(RoleRequest $request)
+    {
+        DB::beginTransaction();
+        try {
+            $data = Role::create($request->all());
+            DB::commit();
+            return returnResponse('Success', $data, Response::HTTP_CREATED);
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw new RoleException($e);
+        }
+    }
+    /**
+     * Update user data
+     */
+    public function edit(RoleRequest $request): object
+    {
+        DB::beginTransaction();
+        try {
+            $data = Role::findOrFail($request->id);
+            $data->update($request->all());
+            DB::commit();
+            return returnResponse('Success', $data, Response::HTTP_OK);
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw new RoleException($e);
+        }
+    }
+    /**
+     * Delete user data
+     */
+    public function delete(Request $request): object
+    {
+        DB::beginTransaction();
+        try {
+            $data = Role::findOrFail($request->id);
+            $data->delete();
+            DB::commit();
+            return returnResponse('Success', $data, Response::HTTP_OK);
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw new RoleException($e);
+        }
+    }
 }

@@ -23,10 +23,10 @@ class UserController extends Controller
     /**
      * get all users
      */
-    public function getAllUsers(): JsonResponse
+    public function index(): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->getAllUsers();
+        $response = $this->userInterface->index();
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
@@ -34,10 +34,10 @@ class UserController extends Controller
      /**
      * Get user
      */
-    public function getUser(Request $request): JsonResponse
+    public function show(Request $request): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->getUser($request);
+        $response = $this->userInterface->show($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
@@ -45,10 +45,10 @@ class UserController extends Controller
     /**
      * Save user
      */
-    public function saveUser(UserRequest $request): JsonResponse
+    public function create(UserRequest $request): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->saveUser($request);
+        $response = $this->userInterface->create($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
@@ -56,13 +56,21 @@ class UserController extends Controller
     /**
      * Edit User data
      */
-    public function editUser(UserRequest $request): JsonResponse
+    public function edit(UserRequest $request, int $userID): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->editUser($request);
+        $response = $this->userInterface->edit($request, $userID);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
 
+    }
+    public function delete(Request $request): JsonResponse
+    {
+        $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
+        $response = $this->userInterface->delete($request);
+        $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
+
+        return response()->json($response, $response->status_code);
     }
 }

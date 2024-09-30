@@ -8,6 +8,7 @@ use GuzzleHttp\Exception\ConnectException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -51,18 +52,18 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $e)
     {
+       // dd(get_class($e));
         switch (true) {
                 // Handling custom exceptions
             case $e instanceof UserException:
             case $e instanceof PostException:
             case $e instanceof CategoryException:
             case $e instanceof AuthException:
-
                 returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
                 break;
                 // Handling connection exceptions
             case $e instanceof ConnectException:
-
+            case $e instanceof HttpException:
                 returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_SERVICE_UNAVAILABLE);
                 break;
                 // Handling validation exceptions
@@ -76,6 +77,7 @@ class Handler extends ExceptionHandler
                 returnExceptionResponse(get_class($e), [$message], Response::HTTP_BAD_REQUEST);
                 break;
             default:
+                //returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_BAD_REQUEST);
                 return parent::render($request, $e);
         }
     }
@@ -87,16 +89,14 @@ class Handler extends ExceptionHandler
     public function register(): void
     {
         $this->renderable(function (AuthenticationException $e, $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                  'message' => 'Error',
-                  'data' => [
-                    'error' => 'Unauthorized route'
-                  ],
-                  'status_code' => 401,
+            return response()->json([
+                'message' => 'Error',
+                'data' => [
+                'error' => 'Unauthorized route'
+                ],
+                'status_code' => 401,
 
-                ], 401);
-            }
-           });
+            ], 401);
+        });
     }
 }

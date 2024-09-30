@@ -9,7 +9,6 @@ use App\Exceptions\UserException;
 use App\Interfaces\UserInterface;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\{Request, Response};
 
 class UserRepository implements UserInterface
@@ -17,7 +16,7 @@ class UserRepository implements UserInterface
     /**
      * Get all the users
      */
-    public function getAllUsers(): object
+    public function index(): object
     {
         try {
             $data = User::all();
@@ -30,7 +29,7 @@ class UserRepository implements UserInterface
     /**
      * Get a particular user
      */
-    public function getUser(Request $request): object
+    public function show(Request $request): object
     {
         try {
             $data = User::find($request->id);
@@ -46,7 +45,7 @@ class UserRepository implements UserInterface
     /**
      * Create a new user
      */
-    public function saveUser(UserRequest $request)
+    public function create(UserRequest $request)
     {
         DB::beginTransaction();
         try {
@@ -61,35 +60,32 @@ class UserRepository implements UserInterface
     /**
      * Update user data
      */
-    public function editUser(UserRequest $request, int $userID): object
+    public function edit(UserRequest $request): object
     {
-
+        DB::beginTransaction();
         try {
-            $data = User::find($userID);
-            if ($data) {
-                $data->update($request->all());
-                return returnResponse('Success', $data, Response::HTTP_OK);
-            } else {
-                return returnResponse('', [], Response::HTTP_NO_CONTENT);
-            }
+            $data = User::findOrFail($request->id);
+            $data->update($request->all());
+            DB::commit();
+            return returnResponse('Success', $data, Response::HTTP_OK);
         } catch (Throwable $e) {
+            DB::rollBack();
             throw new UserException($e);
         }
     }
     /**
      * Delete user data
      */
-    public function deleteUser(Request $request): object
+    public function delete(Request $request): object
     {
+        DB::beginTransaction();
         try {
-            $data = User::find($request->id);
-            if ($data) {
-                $data->delete();
-                return returnResponse('Success', $data, Response::HTTP_OK);
-            } else {
-                return returnResponse('', [], Response::HTTP_NO_CONTENT);
-            }
+            $data = User::findOrFail($request->id)->toArray();
+            $data->delete();
+            DB::commit();
+            return returnResponse('Success', $data, Response::HTTP_OK);
         } catch (Throwable $e) {
+            DB::rollBack();
             throw new UserException($e);
         }
     }

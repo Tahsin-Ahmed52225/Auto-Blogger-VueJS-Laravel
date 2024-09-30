@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 interface UserInterface
 {
-    public function getAllUsers(): object;
-    public function getUser(Request $request): object;
-    public function saveUser(UserRequest $request);
-    public function editUser(UserRequest $request, int $userID): object;
-    public function deleteUser(Request $request): object;
+    public function index(): object;
+    public function show(Request $request): object;
+    public function create(UserRequest $request);
+    public function edit(UserRequest $request): object;
+    public function delete(Request $request): object;
 }

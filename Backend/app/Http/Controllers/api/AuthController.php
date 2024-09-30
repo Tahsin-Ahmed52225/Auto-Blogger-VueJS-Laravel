@@ -28,7 +28,7 @@ class AuthController extends Controller
     public function register(UserRequest $request): JsonResponse
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->userInterface->saveUser($request);
+        $response = $this->userInterface->create($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
         return response()->json($response, $response->status_code);
