@@ -32,12 +32,9 @@ class UserRepository implements UserInterface
     public function show(Request $request): object
     {
         try {
-            $data = User::find($request->id);
-            if ($data) {
-                return returnResponse('Success', $data, Response::HTTP_OK);
-            } else {
-                return returnResponse('', [], Response::HTTP_NO_CONTENT);
-            }
+            $data = User::find($request->id) ?? [];
+
+            return returnResponse('Success', $data, Response::HTTP_OK);
         } catch (Throwable $e) {
             throw new UserException($e);
         }
@@ -80,7 +77,7 @@ class UserRepository implements UserInterface
     {
         DB::beginTransaction();
         try {
-            $data = User::findOrFail($request->id)->toArray();
+            $data = User::findOrFail($request->id);
             $data->delete();
             DB::commit();
             return returnResponse('Success', $data, Response::HTTP_OK);

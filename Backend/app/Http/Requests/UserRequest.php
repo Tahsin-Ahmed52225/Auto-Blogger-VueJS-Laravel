@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Exceptions\UserException;
 use Illuminate\Foundation\Http\FormRequest;
-use stdClass;
-use Throwable;
 
 class UserRequest extends FormRequest
 {

@@ -29,7 +29,7 @@ class RoleController extends Controller
         $response = $this->roleInterface->index();
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
     /**
      * Store a newly created resource in storage.
@@ -40,19 +40,19 @@ class RoleController extends Controller
         $response = $this->roleInterface->create($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Request $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->roleInterface->show($id);
+        $response = $this->roleInterface->show($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
 
     /**
@@ -64,18 +64,18 @@ class RoleController extends Controller
         $response = $this->roleInterface->edit($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function delete(string $id)
+    public function delete(Request $request)
     {
         $this->httpRequestLog(__FILE__, __LINE__, __FUNCTION__);
-        $response = $this->roleInterface->delete($id);
+        $response = $this->roleInterface->delete($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
 }

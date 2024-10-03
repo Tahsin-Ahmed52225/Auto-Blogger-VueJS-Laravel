@@ -58,15 +58,14 @@ class Handler extends ExceptionHandler
             case $e instanceof UserException:
             case $e instanceof PostException:
             case $e instanceof CategoryException:
-            case $e instanceof AuthException:
-                returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
+                return returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_NOT_ACCEPTABLE);
                 break;
-                // Handling connection exceptions
+            // Handling connection exceptions
             case $e instanceof ConnectException:
             case $e instanceof HttpException:
-                returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_SERVICE_UNAVAILABLE);
+                return returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_SERVICE_UNAVAILABLE);
                 break;
-                // Handling validation exceptions
+            // Handling validation exceptions
             case $e instanceof ValidationException:
                 $errorList = $e->validator->errors()->messages();
                 $errorList = array_map(function ($k, $v) {
@@ -74,15 +73,13 @@ class Handler extends ExceptionHandler
                 }, array_keys($errorList), $errorList);
                 $message = implode(' / ', $errorList);
 
-                returnExceptionResponse(get_class($e), [$message], Response::HTTP_BAD_REQUEST);
+                return returnExceptionResponse(get_class($e), [$message], Response::HTTP_BAD_REQUEST);
                 break;
             default:
-                //returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_BAD_REQUEST);
-                return parent::render($request, $e);
+                return returnExceptionResponse(get_class($e), [$e->getMessage()], Response::HTTP_BAD_REQUEST);
+                break;
         }
     }
-
-
     /**
      * Register the exception handling callbacks for the application.
      */
@@ -94,9 +91,8 @@ class Handler extends ExceptionHandler
                 'data' => [
                 'error' => 'Unauthorized route'
                 ],
-                'status_code' => 401,
-
-            ], 401);
+                'status_code' => Response::HTTP_UNAUTHORIZED ,
+            ], Response::HTTP_UNAUTHORIZED);
         });
     }
 }

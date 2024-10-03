@@ -31,7 +31,7 @@ class AuthController extends Controller
         $response = $this->userInterface->create($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
     /**
      * User login
@@ -42,7 +42,7 @@ class AuthController extends Controller
         $response = $this->authInterface->login($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
     public function logout(Request $request)
     {
@@ -50,6 +50,6 @@ class AuthController extends Controller
         $response = $this->authInterface->logout($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
 }

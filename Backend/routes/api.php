@@ -27,6 +27,7 @@ Route::group(['middleware' => ['cors']], function () {
         # Role Routes
         Route::get('/roles', [RoleController::class, 'index'])->name("role.index");
         Route::get('/role/{id}', [RoleController::class, 'show'])->name("role.show");
+        Route::post('/role', [RoleController::class, 'create'])->name("role.create");
         Route::put('/role/{id}', [RoleController::class, 'edit'])->name("role.edit");
         Route::delete('/role/{id}', [RoleController::class, 'delete'])->name("role.delete");
         # Permisson Routes

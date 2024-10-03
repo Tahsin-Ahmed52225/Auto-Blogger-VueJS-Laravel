@@ -29,7 +29,7 @@ class UserController extends Controller
         $response = $this->userInterface->index();
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
      /**
      * Get user
@@ -40,7 +40,7 @@ class UserController extends Controller
         $response = $this->userInterface->show($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
     /**
      * Save user
@@ -51,7 +51,7 @@ class UserController extends Controller
         $response = $this->userInterface->create($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
     /**
      * Edit User data
@@ -62,7 +62,7 @@ class UserController extends Controller
         $response = $this->userInterface->edit($request, $userID);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
 
     }
     public function delete(Request $request): JsonResponse
@@ -71,6 +71,6 @@ class UserController extends Controller
         $response = $this->userInterface->delete($request);
         $this->httpResponseLog($response, __FILE__, __LINE__, __FUNCTION__);
 
-        return response()->json($response, $response->status_code);
+        return new JsonResponse($response, $response->status_code);
     }
 }

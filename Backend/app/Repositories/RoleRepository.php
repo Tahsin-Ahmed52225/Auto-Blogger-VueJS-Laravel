@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use Throwable;
+use App\Models\User;
 use App\Exceptions\RoleException;
 use App\Interfaces\RoleInterface;
 use App\Http\Requests\RoleRequest;
@@ -31,12 +32,9 @@ class RoleRepository implements RoleInterface
     public function show(Request $request): object
     {
         try {
-            $data = Role::find($request->id);
-            if ($data) {
-                return returnResponse('Success', $data, Response::HTTP_OK);
-            } else {
-                return returnResponse('', [], Response::HTTP_NO_CONTENT);
-            }
+            $data = Role::find($request->id) ?? [];
+
+            return returnResponse('Success', $data, Response::HTTP_OK);
         } catch (Throwable $e) {
             throw new RoleException($e);
         }
@@ -44,7 +42,7 @@ class RoleRepository implements RoleInterface
     /**
      * Create a new user
      */
-    public function create(RoleRequest $request)
+    public function create(RoleRequest $request): object
     {
         DB::beginTransaction();
         try {
@@ -80,7 +78,9 @@ class RoleRepository implements RoleInterface
         DB::beginTransaction();
         try {
             $data = Role::findOrFail($request->id);
-            $data->delete();
+            $user = User::find($request->id);
+            $user->assignRole($data);
+           // $data->delete();
             DB::commit();
             return returnResponse('Success', $data, Response::HTTP_OK);
         } catch (Throwable $e) {
